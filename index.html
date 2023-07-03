@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prime Leaks</title>
+    <style>
+        body {
+            background-color: #1f1f1f;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #ff4d4d;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .tab {
+            display: none;
+        }
+
+        .tab-links {
+            display: flex;
+        }
+
+        .tab-links a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            background-color: #ff4d4d;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+            background-color: #2b2b2b;
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+        }
+
+        .visible {
+            display: block;
+        }
+
+        .file-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .file-item {
+            width: calc(33.33% - 10px);
+            margin-bottom: 20px;
+            background-color: #323232;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .file-link {
+            color: #ff4d4d;
+            text-decoration: none;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Prime Leaks</h1>
+        <div class="tab-container">
+            <div class="tab-links">
+                <a href="#" class="tab-link visible" data-tab="files-tab">Configs</a>
+                <a href="#" class="tab-link" data-tab="credits-tab">Credits</a>
+                <a href="#" class="tab-link" data-tab="discord-tab">Discord</a>
+            </div>
+        </div>
+        <div class="tab-content visible" id="files-tab">
+            <p>Click on the links below to download the configs:</p>
+            <ul class="file-list" id="fileList"></ul>
+        </div>
+        <div class="tab-content" id="credits-tab">
+            <h2 style="color: #ff4d4d; font-weight: bold;">Website made by 0prime and Crimsonfied</h2>
+        </div>
+        <div class="tab-content" id="discord-tab">
+            <h2 style="color: #ff4d4d;">0prime's Official Server:</h2>
+            <p><a href="https://discord.gg/vapeprivate">discord.gg/vapeprivate</a></p>
+            <h2 style="color: #ff4d4d;">Crimsonfied's Official Server:</h2>
+            <p><a href="https://discord.gg/EVYaMYAMJp">discord.gg/EVYaMYAMJp</a></p>
+        </div>
+    </div>
+
+    <script>
+        const tabLinks = document.querySelectorAll('.tab-link');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabLinks.forEach(tabLink => {
+            tabLink.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                const selectedTab = event.target.dataset.tab;
+
+                tabContents.forEach(tabContent => {
+                    tabContent.classList.remove('visible');
+                });
+
+                document.getElementById(selectedTab).classList.add('visible');
+            });
+        });
+
+        fetch('https://api.github.com/repos/CrimsonfiedOfficial/PrimeLeaks/contents')
+            .then(response => response.json())
+            .then(data => {
+                const fileList = document.getElementById('fileList');
+
+                data.forEach(file => {
+                    if (file.type === 'file' && file.name !== 'index.html') {
+                        const listItem = document.createElement('li');
+                        const fileItem = document.createElement('div');
+                        const link = document.createElement('a');
+                        fileItem.classList.add('file-item');
+                        link.classList.add('file-link');
+                        link.href = file.download_url;
+                        link.textContent = file.name;
+                        fileItem.appendChild(link);
+                        listItem.appendChild(fileItem);
+                        fileList.appendChild(listItem);
+                    }
+                });
+            });
+    </script>
+</body>
+</html>
